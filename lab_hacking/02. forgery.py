@@ -72,7 +72,7 @@ class Tab1(QWidget):
                 self.vote_list_widget.addItem(id)
                 self.vote_list[id] = block['transaction']['data'].copy()
                 self.vote_list[id]['total_vote'] = 0
-                self.vote_lost[id]['vote_count'] = dict()
+                self.vote_list[id]['vote_count'] = dict()
                 for option in block['transaction']['data']['options']:
                     self.vote_list[id]['vote_count'][option] = 0
             elif block['transaction']['type'] == 'vote':
@@ -117,7 +117,7 @@ class Tab1(QWidget):
         }
         block['hash'] = get_block_hash(block)
         self.devs.chain.append(block)
-        for node in self.devs.nodes().copy():
+        for node in self.devs.nodes.copy():
             try:
                 node[0].sendall(json.dumps(block).encode())
             except:
@@ -136,7 +136,7 @@ class Tab1(QWidget):
         }
         block['hash'] = get_block_hash(block)
         self.devs.chain.append(block)
-        for node in self.devs.nodes().copy():
+        for node in self.devs.nodes.copy():
             try:
                 node[0].sendall(json.dumps(block).encode())
             except:
@@ -155,7 +155,7 @@ class Tab1(QWidget):
         }
         block['hash'] = get_block_hash(block)
         self.devs.chain.append(block)
-        for node in self.devs.nodes().copy():
+        for node in self.devs.nodes.copy():
             try:
                 node[0].sendall(json.dumps(block).encode())
             except:
