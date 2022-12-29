@@ -1,0 +1,4 @@
+flask==2.0.3
+PyQt5==5.15.6
+ecdsa==0.18.0
+requests==2.27.1
