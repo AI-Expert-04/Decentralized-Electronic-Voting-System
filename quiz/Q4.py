@@ -30,26 +30,21 @@ class Tab1(QWidget):
         self.option2_button.clicked.connect(self.vote2)
         self.option3_button = QPushButton()
         self.option3_button.clicked.connect(self.vote3)
-        self.option4_button = QPushButton()
-        self.option4_button.clicked.connect(self.vote4)
         self.vote_layout = QVBoxLayout()
         self.vote_layout.addWidget(self.question_label)
         self.vote_layout.addWidget(self.option1_button)
         self.vote_layout.addWidget(self.option2_button)
         self.vote_layout.addWidget(self.option3_button)
-        self.vote_layout.addWidget(self.option4_button)
         self.vote_group_box.setLayout(self.vote_layout)
 
         self.vote_result_group_box = QGroupBox('투표 결과')
         self.option1_progressbar = QProgressBar()
         self.option2_progressbar = QProgressBar()
         self.option3_progressbar = QProgressBar()
-        self.option4_progressbar = QProgressBar()
         self.vote_result_layout = QVBoxLayout()
         self.vote_result_layout.addWidget(self.option1_progressbar)
         self.vote_result_layout.addWidget(self.option2_progressbar)
         self.vote_result_layout.addWidget(self.option3_progressbar)
-        self.vote_result_layout.addWidget(self.option4_progressbar)
         self.vote_result_group_box.setLayout(self.vote_result_layout)
 
         self.main_layout = QGridLayout()
@@ -68,7 +63,6 @@ class Tab1(QWidget):
             if block['type'] == 'open':
                 vote_id = block['data']['id']
                 self.vote_list_widget.addItem(vote_id)
-                # self.vote_list_widget.addItem(block['data']['question'])
                 self.vote_list[vote_id] = block['data']
                 self.vote_list[vote_id]['total_vote'] = 0
                 self.vote_list[vote_id]['vote_count'] = dict()
@@ -104,11 +98,6 @@ class Tab1(QWidget):
         self.option3_progressbar.setRange(0, self.vote_list[self.current_vote_id]['total_vote'])
         option3_text = self.vote_list[self.current_vote_id]['options'][2]
         self.option3_progressbar.setValue(self.vote_list[self.current_vote_id]['vote_count'][option3_text])
-
-        self.option4_button.setText(self.vote_list[self.current_vote_id]['options'][3])
-        self.option4_progressbar.setRange(0, self.vote_list[self.current_vote_id]['total_vote'])
-        option4_text = self.vote_list[self.current_vote_id]['options'][3]
-        self.option4_progressbar.setValue(self.vote_list[self.current_vote_id]['vote_count'][option4_text])
 
     def vote1(self):
         block = {
@@ -158,22 +147,6 @@ class Tab1(QWidget):
                 self.devs.nodes.remove(node)
         self.update_vote_list()
 
-    def vote4(self):
-        block = {
-            'type': 'vote',
-            'data': {
-                'id': self.current_vote_id,
-                'vote': self.option4_button.text()
-            }
-        }
-        self.devs.chain.append(block)
-        for node in self.devs.nodes.copy():
-            try:
-                node[0].sendall(json.dumps(block).encode())
-            except:
-                self.devs.nodes.remove(node)
-        self.update_vote_list()
-
 
 class Tab2(QWidget):
     def __init__(self, devs):
@@ -187,7 +160,6 @@ class Tab2(QWidget):
         self.option1_line_edit = QLineEdit()
         self.option2_line_edit = QLineEdit()
         self.option3_line_edit = QLineEdit()
-        self.option4_line_edit = QLineEdit()
 
         self.publish_clear_layout = QHBoxLayout()
         self.publish_button = QPushButton('게시')
@@ -201,7 +173,6 @@ class Tab2(QWidget):
         self.form_layout.addRow('선택지:', self.option1_line_edit)
         self.form_layout.addRow('', self.option2_line_edit)
         self.form_layout.addRow('', self.option3_line_edit)
-        self.form_layout.addRow('', self.option4_line_edit)
         self.form_layout.addRow('', self.publish_clear_layout)
 
         self.setLayout(self.form_layout)
@@ -215,8 +186,7 @@ class Tab2(QWidget):
                 'options': [
                     self.option1_line_edit.text(),
                     self.option2_line_edit.text(),
-                    self.option3_line_edit.text(),
-                    self.option4_line_edit.text()
+                    self.option3_line_edit.text()
                 ]
             }
         }
@@ -234,7 +204,6 @@ class Tab2(QWidget):
         self.option1_line_edit.setText('')
         self.option2_line_edit.setText('')
         self.option3_line_edit.setText('')
-        self.option4_line_edit.setText('')
 
 
 class SocketReceiver(QThread):
